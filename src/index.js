@@ -15,17 +15,7 @@ class ZeroDB {
     this.source = source;
     this.database = {};
 
-    if (!this.source) {
-      throw new Error('Database source should be provided');
-    }
-
-    if (typeof this.source !== 'string') {
-      throw new Error('Database source should be a valid string');
-    }
-
-    if (path.extname(this.source) !== '.json') {
-      throw new Error('Database source should be JSON');
-    }
+    this.validateSource();
 
     const filePath = path.resolve(require.main.path, this.source);
     const fileExists = fs.existsSync(filePath);
@@ -41,6 +31,28 @@ class ZeroDB {
       } catch (err) {
         throw new Error('Database source contains malformed JSON');
       }
+    }
+  }
+
+  /**
+   * @property {Function} validateSource - Validate the database source
+   *
+   * @returns {void}
+   *
+   * @example
+   *   zerodb.validateSource()
+   */
+  validateSource() {
+    if (!this.source) {
+      throw new Error('Database source should be provided');
+    }
+
+    if (typeof this.source !== 'string') {
+      throw new Error('Database source should be a valid string');
+    }
+
+    if (path.extname(this.source) !== '.json') {
+      throw new Error('Database source should be JSON');
     }
   }
 }
