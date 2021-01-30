@@ -1,5 +1,6 @@
 const path = require('path');
 const fs = require('fs');
+const { promisify } = require('util');
 
 class ZeroDB {
   /**
@@ -74,6 +75,23 @@ class ZeroDB {
     } else {
       fs.writeFileSync(filePath, '{}');
     }
+  }
+
+  /**
+   * @property {Function} save - Save the database
+   *
+   * @returns {Boolean} - True if it was successful
+   *
+   * @example
+   *   zerodb.save()
+   */
+  async save() {
+    const writeFile = promisify(fs.writeFile);
+    const filePath = path.resolve(require.main.path, this.source);
+    const data = JSON.stringify(this.database);
+
+    await writeFile(filePath, data, 'utf-8');
+    return true;
   }
 }
 
