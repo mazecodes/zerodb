@@ -2,6 +2,8 @@ const path = require('path');
 const fs = require('fs');
 const { promisify } = require('util');
 const _ = require('lodash');
+const shallowEqual = require('shallowequal');
+const isRegex = require('is-regex');
 
 class ZeroDB {
   /**
@@ -209,6 +211,51 @@ class ZeroDB {
    */
   has(path) {
     return _.has(this.database, path);
+  }
+
+  /**
+   * @property {Function} find - Find objects which match with the query
+   *
+   * @param {String} path - Path to find in
+   * @param {Object} query - The query to search for
+   * @returns {(null|Array)} - The result, null if it found nothing
+   *
+   * @example
+   *   zerodb.find('posts', { author: 'John' })
+   *   zerodb.find('posts', { title: /^Hello/ })
+   */
+  find(path, query) {
+    const destination = _.get(this.database, path);
+
+    if (typeof query !== 'object') {
+      throw new Error('Query must be an object');
+    }
+
+    if (!destination || !(destination instanceof Array)) {
+      return null;
+    }
+
+    const foundings = destination.filter(data => {
+      for (let key of Object.keys(query)) {
+        if (isRegex(query[key])) {
+          if (typeof data[key] !== 'string') {
+            return false;
+          }
+
+          if (!query[key].test(data[key])) {
+            return false;
+          }
+        } else {
+          if (!shallowEqual(query[key], data[key])) {
+            return false;
+          }
+        }
+      }
+
+      return true;
+    });
+
+    return foundings;
   }
 }
 

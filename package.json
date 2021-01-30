@@ -32,6 +32,8 @@
     "prettier": "^2.2.1"
   },
   "dependencies": {
-    "lodash": "^4.17.20"
+    "is-regex": "^1.1.1",
+    "lodash": "^4.17.20",
+    "shallowequal": "^1.1.0"
   }
 }
