@@ -16,6 +16,7 @@ class ZeroDB {
   constructor(source) {
     this.source = source;
     this.database = {};
+    this.initialState = {};
 
     this.validateSource();
     this.readDatabase();
@@ -41,6 +42,22 @@ class ZeroDB {
 
     if (path.extname(this.source) !== '.json') {
       throw new Error('Database source should be JSON');
+    }
+  }
+
+  /**
+   * @property {Function} validateState - Validate the given state
+   * @access private
+   *
+   * @param {*} state - State to validate
+   * @returns {void}
+   *
+   * @example
+   *   zerodb.validateState({ foo: 'bar' })
+   */
+  validateState(state) {
+    if (typeof state !== 'object') {
+      throw new Error('State should be an object');
     }
   }
 
@@ -79,6 +96,32 @@ class ZeroDB {
   }
 
   /**
+   * @property {Function} init - Set initial state of the database
+   *
+   * @param {Object} initialState - The initial state
+   * @param {Object} [options] - The options object (optional)
+   * @param {Boolean} [options.force] - If the database should be replaced with the initial state (optional)
+   * @returns {Object} - The ZeroDB database
+   *
+   * @example
+   *   zerodb.init({ posts: [] })
+   *   zerodb.init({ posts: [] }, { force: true })
+   */
+  init(initialState = {}, options = {}) {
+    this.validateState(initialState);
+    this.initialState = initialState;
+
+    const isForced = options.force;
+    const isEmpty = Object.keys(this.database).length === 0;
+
+    if (isEmpty || isForced) {
+      this.database = initialState;
+    }
+
+    return this;
+  }
+
+  /**
    * @property {Function} save - Save the database
    *
    * @returns {Boolean} - True if it was successful
@@ -100,7 +143,7 @@ class ZeroDB {
    *
    * @param {String} path - Path to set
    * @param {*} value - Value to set
-   * @returns {Object} - Returns the ZeroDB object
+   * @returns {Object} - The ZeroDB object
    *
    * @example
    *   zerodb.set('user.name', 'John Doe')
