@@ -28,9 +28,9 @@ zerodb
 
 const posts = zerodb.find('posts', {});
 const johnPosts = zerodb.find('posts', { author: 'John' });
-const onePost = zerodb.find('posts', {
+const onePost = zerodb.findOne('posts', {
   author: 'John',
-  id: 0,
+  id: 10,
 });
 const withRegex = zerodb.find('posts', { title: /^Test/ });
 

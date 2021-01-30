@@ -257,6 +257,26 @@ class ZeroDB {
 
     return foundings;
   }
+
+  /**
+   * @property {Function} findOne - Find one object which matches with the query
+   *
+   * @param {String} path - Path to find in
+   * @param {*} query - The query to search for
+   * @returns {(null|Object)} - The result, null if it found nothing
+   *
+   * @example
+   *   zerodb.findOne('posts', { id: 0 })
+   */
+  findOne(path, query) {
+    const result = this.find(path, query);
+
+    if (!result) {
+      return null;
+    }
+
+    return result.length !== 0 ? result[0] : null;
+  }
 }
 
 module.exports = ZeroDB;
