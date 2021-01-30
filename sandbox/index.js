@@ -13,3 +13,6 @@ zerodb.set('name', 'John Doe');
 console.log(zerodb.get('namse', 'default'));
 
 zerodb.push('test', 'hello').push('test', 'world').save();
+
+console.log(zerodb.has('test'));
+console.log(zerodb.has('test 2'));

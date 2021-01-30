@@ -196,6 +196,20 @@ class ZeroDB {
 
     return this;
   }
+
+  /**
+   * @property {Function} has - Check if a property exists
+   *
+   * @param {String} path - Path to check
+   * @returns {Boolean} - True if exists
+   *
+   * @example
+   *   zerodb.has('posts')
+   *   zerodb.has('user.name')
+   */
+  has(path) {
+    return _.has(this.database, path);
+  }
 }
 
 module.exports = ZeroDB;
