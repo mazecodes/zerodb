@@ -1,6 +1,7 @@
 const path = require('path');
 const fs = require('fs');
 const { promisify } = require('util');
+const _ = require('lodash');
 
 class ZeroDB {
   /**
@@ -92,6 +93,22 @@ class ZeroDB {
 
     await writeFile(filePath, data, 'utf-8');
     return true;
+  }
+
+  /**
+   * @property {Function} set - Set a value
+   *
+   * @param {String} path - Path to set
+   * @param {*} value - Value to set
+   * @returns {Object} - Returns the ZeroDB object
+   *
+   * @example
+   *   zerodb.set('user.name', 'John Doe')
+   */
+  set(path, value) {
+    _.set(this.database, path, value);
+
+    return this;
   }
 }
 

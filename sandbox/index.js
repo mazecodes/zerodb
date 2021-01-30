@@ -6,4 +6,4 @@ zerodb.database = {
   foo: 'bar',
 };
 
-zerodb.save().then(console.log);
+zerodb.set('user.name', 'John Doe 1').save();
