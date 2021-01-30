@@ -168,6 +168,34 @@ class ZeroDB {
   get(path, defaultValue = null) {
     return _.get(this.database, path, defaultValue);
   }
+
+  /**
+   * @property {Function} push - Push a value into an array
+   *
+   * @param {String} path - Path to push the value to
+   * @param {*} value - The value to push
+   * @returns {Object} - The ZeroDB object
+   *
+   * @example
+   *   zerodb.push('posts', { title: 'Foo' })
+   */
+  push(path, value) {
+    const destination = _.get(this.database, path);
+
+    if (!destination) {
+      this.set(path, [value]);
+
+      return this;
+    }
+
+    if (!(destination instanceof Array)) {
+      throw new Error('You can only push values to an array');
+    }
+
+    destination.push(value);
+
+    return this;
+  }
 }
 
 module.exports = ZeroDB;

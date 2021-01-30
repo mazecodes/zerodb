@@ -11,3 +11,5 @@ const zerodb = new ZeroDB('./database.json');
 zerodb.set('name', 'John Doe');
 
 console.log(zerodb.get('namse', 'default'));
+
+zerodb.push('test', 'hello').push('test', 'world').save();
