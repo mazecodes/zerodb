@@ -8,4 +8,6 @@ const zerodb = new ZeroDB('./database.json');
 
 // zerodb.set('user.name', 'John Doe 1').save();
 
-zerodb.init({ posts: [] }).save();
+zerodb.set('name', 'John Doe');
+
+console.log(zerodb.get('namse', 'default'));

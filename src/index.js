@@ -153,6 +153,21 @@ class ZeroDB {
 
     return this;
   }
+
+  /**
+   * @property {Function} get - Get a value
+   *
+   * @param {String} path - Path to get the value from
+   * @param {*} defaultValue - The default value
+   * @returns {*} - The main value if it exists or the default value
+   *
+   * @example
+   *   zerodb.get('name')
+   *   zerodb.get('post.title', 'Title')
+   */
+  get(path, defaultValue = null) {
+    return _.get(this.database, path, defaultValue);
+  }
 }
 
 module.exports = ZeroDB;
