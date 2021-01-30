@@ -2,6 +2,15 @@ const path = require('path');
 const fs = require('fs');
 
 class ZeroDB {
+  /**
+   * @constructor
+   *
+   * @param {String} source - Database source
+   * @returns {void}
+   *
+   * @example
+   *   new ZeroDB('./database.json')
+   */
   constructor(source) {
     this.source = source;
     this.database = {};
