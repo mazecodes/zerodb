@@ -16,26 +16,12 @@ class ZeroDB {
     this.database = {};
 
     this.validateSource();
-
-    const filePath = path.resolve(require.main.path, this.source);
-    const fileExists = fs.existsSync(filePath);
-
-    if (!fileExists) {
-      fs.writeFileSync(filePath, '{}');
-    } else {
-      try {
-        const data = fs.readFileSync(filePath);
-        const database = JSON.parse(data);
-
-        this.database = database;
-      } catch (err) {
-        throw new Error('Database source contains malformed JSON');
-      }
-    }
+    this.readDatabase();
   }
 
   /**
    * @property {Function} validateSource - Validate the database source
+   * @access private
    *
    * @returns {void}
    *
@@ -53,6 +39,40 @@ class ZeroDB {
 
     if (path.extname(this.source) !== '.json') {
       throw new Error('Database source should be JSON');
+    }
+  }
+
+  /**
+   * @property {Function} readDatabase - Read the database, create one if it doesn't exists
+   * @access private
+   *
+   * @returns {void}
+   *
+   * @example
+   *   zerodb.readDatabase()
+   */
+  readDatabase() {
+    const filePath = path.resolve(require.main.path, this.source);
+    const fileExists = fs.existsSync(filePath);
+
+    if (fileExists) {
+      const stats = fs.statSync(filePath);
+      const isFile = stats.isFile();
+
+      if (!isFile) {
+        throw new Error('Database source should be a file');
+      }
+
+      try {
+        const data = fs.readFileSync(filePath, 'utf-8');
+        const database = JSON.parse(data);
+
+        this.database = database;
+      } catch (err) {
+        throw new Error('Database source contains malformed JSON');
+      }
+    } else {
+      fs.writeFileSync(filePath, '{}');
     }
   }
 }
