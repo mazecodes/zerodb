@@ -211,3 +211,14 @@ new ZeroDB('./database.json', {
 ZeroDB uses **PBKDF2** for key derivation with default iterations set to **50,000** and uses **AES256** for encryption. It will also use **HMAC-SHA256** for signing the state.
 
 **Note**: The encryption will only happen when the database is being saved.
+
+## Contributing
+
+All contributions, issues and feature requests are welcome!<br>
+Please feel free to check [issues page](https://github.com/mazecodes/zerodb/issues).
+
+1. Fork the project
+1. Create your feature branch (`git checkout -b feature/AwesomeFeature`)
+1. Commit your changes (`git commit -m "Add Awesome Feature"`)
+1. Push to the branch (`git push origin feature/AwesomeFeature`)
+1. Open a Pull Request
