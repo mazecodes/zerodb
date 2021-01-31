@@ -29,6 +29,29 @@ const generateKey = (secret, salt, iterations = 100_000) =>
     iterations,
   }).toString(CryptoJS.enc.Hex);
 
+/**
+ * Encrypt the given state
+ *
+ * @param {String} state - The state to encrypt
+ * @param {String} key - The key to be used for encryption
+ * @returns {Object} - Encrypted state and the signature
+ *
+ * @example
+ *   encryptState('{ foo: "bar"}', 'key')
+ */
+const encryptState = (state, key) => {
+  const encryptedState = CryptoJS.AES.encrypt(state, key).toString();
+  const signature = CryptoJS.HmacSHA256(encryptedState, key).toString(
+    CryptoJS.enc.Hex
+  );
+
+  return {
+    state: encryptedState,
+    signature,
+  };
+};
+
 module.exports = {
   generateSalt,
+  generateKey,
 };
