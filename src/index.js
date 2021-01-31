@@ -4,6 +4,7 @@ const { promisify } = require('util');
 const _ = require('lodash');
 const shallowEqual = require('shallowequal');
 const isRegex = require('is-regex');
+const cloneDeep = require('clone-deep');
 
 class ZeroDB {
   /**
@@ -111,7 +112,7 @@ class ZeroDB {
    */
   init(initialState = {}, options = {}) {
     this.validateState(initialState);
-    this.initialState = initialState;
+    this.initialState = cloneDeep(initialState);
 
     const isForced = options.force;
     const isEmpty = Object.keys(this.database).length === 0;
@@ -276,6 +277,20 @@ class ZeroDB {
     }
 
     return result.length !== 0 ? result[0] : null;
+  }
+
+  /**
+   * @property {Function} reset - Reset the database to its initial state
+   *
+   * @returns {Object} - The ZeroDB object
+   *
+   * @example
+   *   zerodb.reset()
+   */
+  reset() {
+    this.database = this.initialState;
+
+    return this;
   }
 }
 

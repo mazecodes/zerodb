@@ -4,6 +4,8 @@ const zerodb = new ZeroDB('./database.json');
 
 zerodb.init({ posts: [] }, { force: true });
 
+console.log(zerodb.initialState);
+
 zerodb
   .push('posts', {
     id: 0,
@@ -34,7 +36,10 @@ const onePost = zerodb.findOne('posts', {
 });
 const withRegex = zerodb.find('posts', { title: /^Test/ });
 
-console.log(posts);
-console.log(johnPosts);
-console.log(onePost);
-console.log(withRegex);
+// console.log(posts);
+// console.log(johnPosts);
+// console.log(onePost);
+// console.log(withRegex);
+
+zerodb.reset().save().then(console.log);
+console.log(zerodb.initialState);
