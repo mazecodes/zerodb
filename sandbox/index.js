@@ -63,3 +63,6 @@ zerodb.update('username', value => value.toLowerCase());
 console.log(zerodb.get('username'));
 
 console.log(zerodb.getState());
+zerodb.setState({ foo: 'bar' }).save();
+
+console.log(zerodb.getState());

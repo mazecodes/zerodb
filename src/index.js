@@ -411,6 +411,22 @@ class ZeroDB {
 
     return cloneDeep(state);
   }
+
+  /**
+   * @property {Function} setState - Replace the current state with a new one
+   *
+   * @param {Object} state - The new state
+   * @returns {Object} - The ZeroDB object
+   *
+   * @example
+   *   zerodb.setState({ foo: 'bar' })
+   */
+  setState(state) {
+    this.validateState(state);
+    this.database = state;
+
+    return this;
+  }
 }
 
 module.exports = ZeroDB;
