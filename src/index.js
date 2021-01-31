@@ -74,6 +74,10 @@ class ZeroDB {
       if (typeof this.secret !== 'string') {
         throw new Error('The secret must be a string');
       }
+
+      if (typeof this.iterations !== 'number') {
+        throw new Error('The iterations must be a number');
+      }
     }
   }
 
