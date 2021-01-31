@@ -118,9 +118,64 @@ class ZeroDB {
         const data = fs.readFileSync(filePath, 'utf-8');
         const database = JSON.parse(data);
 
-        this.database = database;
+        if (this.encryption) {
+          if (!database._encryption) {
+            this.salt = crypto.generateSalt();
+            this.key = crypto.generateKey(
+              this.secret,
+              this.salt,
+              this.iterations
+            );
+            this.database = database;
+
+            const encryptedState = this.encryptState();
+
+            fs.writeFileSync(filePath, JSON.stringify(encryptedState), 'utf-8');
+          } else {
+            const { salt, iterations } = database._encryption;
+
+            if (!salt || !iterations) {
+              this.salt = crypto.generateSalt();
+            } else {
+              this.salt = salt;
+              this.iterations = iterations;
+            }
+
+            this.key = crypto.generateKey(
+              this.secret,
+              this.salt,
+              this.iterations
+            );
+
+            const stateContent = database.state.content;
+            const stateSignature = database.state.signature;
+
+            if ((!stateContent, !stateSignature)) {
+              throw new Error('The state is not valid');
+            }
+
+            const isStateValid = crypto.isStateValid(
+              stateContent,
+              stateSignature,
+              this.key
+            );
+
+            if (!isStateValid) {
+              throw new Error('The state has been altered');
+            }
+
+            const decryptedState = crypto.decryptState(stateContent, this.key);
+
+            this.database = JSON.parse(decryptedState);
+          }
+        } else {
+          this.database = database;
+        }
       } catch (err) {
-        throw new Error('Database source contains malformed JSON');
+        console.log(err);
+        if (err instanceof SyntaxError) {
+          throw new Error('Database source contains malformed JSON');
+        }
       }
     } else {
       this.createDatabase(filePath);
@@ -128,16 +183,18 @@ class ZeroDB {
   }
 
   createDatabase(filePath) {
+    let data = '{}';
+
     if (this.encryption) {
       this.salt = crypto.generateSalt();
       this.key = crypto.generateKey(this.secret, this.salt, this.iterations);
 
       const encryptedState = this.encryptState();
 
-      fs.writeFileSync(filePath, JSON.stringify(encryptedState));
-    } else {
-      fs.writeFileSync(filePath, '{}');
+      data = JSON.stringify(encryptedState);
     }
+
+    fs.writeFileSync(filePath, data, 'utf-8');
   }
 
   encryptState() {
@@ -195,7 +252,9 @@ class ZeroDB {
   async save() {
     const writeFile = promisify(fs.writeFile);
     const filePath = path.resolve(require.main.path, this.source);
-    const data = JSON.stringify(this.database);
+    const data = this.encryption
+      ? JSON.stringify(this.encryptState())
+      : JSON.stringify(this.database);
 
     await writeFile(filePath, data, 'utf-8');
     return true;
