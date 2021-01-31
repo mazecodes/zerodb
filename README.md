@@ -7,6 +7,10 @@
 
 - [Install](#install)
 - [Usage](#usage)
+- [Contributing](#contributing)
+- [Author](#author)
+- [Support](#show-your-support)
+- [License](#license)
 
 ## Install
 
