@@ -6,6 +6,8 @@ const shallowEqual = require('shallowequal');
 const isRegex = require('is-regex');
 const cloneDeep = require('clone-deep');
 
+const crypto = require('./lib/crypto');
+
 class ZeroDB {
   /**
    * @constructor
@@ -21,8 +23,10 @@ class ZeroDB {
     this.database = {};
     this.initialState = {};
 
-    this.encrypt = !!options.encrypt;
+    this.encryption = !!options.encryption;
     this.secret = options.secret || '';
+    this.iterations = options.iterations || 50_000;
+    this.salt = '';
 
     this.validateSource();
     this.validateCrypto();
@@ -62,12 +66,12 @@ class ZeroDB {
    *   zerodb.validateCrypto()
    */
   validateCrypto() {
-    if (this.encrypt) {
+    if (this.encryption) {
       if (!this.secret) {
         throw new Error('The secret must be provided for encryption');
       }
 
-      if (typeof secret !== 'string') {
+      if (typeof this.secret !== 'string') {
         throw new Error('The secret must be a string');
       }
     }
@@ -119,8 +123,35 @@ class ZeroDB {
         throw new Error('Database source contains malformed JSON');
       }
     } else {
-      fs.writeFileSync(filePath, '{}');
+      if (this.encryption) {
+        this.salt = crypto.generateSalt();
+        this.key = crypto.generateKey(this.secret, this.salt, this.iterations);
+
+        const encryptedState = this.encryptState();
+
+        fs.writeFileSync(filePath, JSON.stringify(encryptedState));
+      } else {
+        fs.writeFileSync(filePath, '{}');
+      }
     }
+  }
+
+  encryptState() {
+    const state = JSON.stringify(this.database);
+    const encryptedState = crypto.encryptState(state, this.key);
+
+    const stateObject = {
+      _encryption: {
+        salt: this.salt,
+        iterations: this.iterations,
+      },
+      state: {
+        content: encryptedState.state,
+        signature: encryptedState.signature,
+      },
+    };
+
+    return stateObject;
   }
 
   /**

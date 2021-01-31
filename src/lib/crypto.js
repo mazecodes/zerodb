@@ -54,4 +54,5 @@ const encryptState = (state, key) => {
 module.exports = {
   generateSalt,
   generateKey,
+  encryptState,
 };
