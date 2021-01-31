@@ -292,6 +292,21 @@ class ZeroDB {
 
     return this;
   }
+
+  /**
+   * @property {Function} delete - Delete the given path
+   *
+   * @param {String} path - Path to delete
+   * @returns {Object} - The ZeroDB object
+   *
+   * @example
+   *   zerodb.delete('user.name')
+   */
+  delete(path) {
+    _.unset(this.database, path);
+
+    return this;
+  }
 }
 
 module.exports = ZeroDB;
