@@ -169,7 +169,10 @@ class ZeroDB {
    *   zerodb.get('post.title', 'Title')
    */
   get(path, defaultValue = null) {
-    return _.get(this.database, path, defaultValue);
+    const data = _.get(this.database, path, defaultValue);
+    const clonedData = cloneDeep(data);
+
+    return clonedData;
   }
 
   /**
@@ -183,7 +186,7 @@ class ZeroDB {
    *   zerodb.push('posts', { title: 'Foo' })
    */
   push(path, value) {
-    const destination = this.get(path);
+    const destination = _.get(this.database, path);
 
     if (!destination) {
       this.set(path, [value]);
