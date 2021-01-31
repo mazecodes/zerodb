@@ -13,6 +13,10 @@ class ZeroDB {
    * @constructor
    *
    * @param {String} source - Database source
+   * @param {Object} [options] - The custom options (optional)
+   * @param {Boolean} [options.encryption] - If there should be encryption/decryption
+   * @param {String} [options.secret] - The secret to use for encryption/decryption (Required if the encryption is true)
+   * @param {Number} [options.iterations] - The number of iterations for key generation
    * @returns {void}
    *
    * @example
@@ -142,7 +146,8 @@ class ZeroDB {
               this.salt = crypto.generateSalt();
             } else {
               this.salt = salt;
-              this.iterations = iterations;
+              this.iterations =
+                typeof iterations === 'number' ? iterations : this.iterations;
             }
 
             this.key = crypto.generateKey(
@@ -176,7 +181,6 @@ class ZeroDB {
           this.database = database;
         }
       } catch (err) {
-        console.log(err);
         if (err instanceof SyntaxError) {
           throw new Error('Database source contains malformed JSON');
         }
@@ -186,6 +190,16 @@ class ZeroDB {
     }
   }
 
+  /**
+   * @property {Function} createDatabase - Create a database
+   * @access private
+   *
+   * @param {String} filePath - The path to where the database should be created
+   * @returns {void}
+   *
+   * @example
+   *   zerodb.createDatabase('/path/to/db.json')
+   */
   createDatabase(filePath) {
     let data = '{}';
 
@@ -201,6 +215,15 @@ class ZeroDB {
     fs.writeFileSync(filePath, data, 'utf-8');
   }
 
+  /**
+   * @property {Function} encryptState - Encrypt the current state
+   * @access private
+   *
+   * @returns {Object} - An object containing the state and encryption config
+   *
+   * @example
+   *   zerodb.encryptState()
+   */
   encryptState() {
     const state = JSON.stringify(this.database);
     const encryptedState = crypto.encryptState(state, this.key);
