@@ -307,6 +307,37 @@ class ZeroDB {
 
     return this;
   }
+
+  /**
+   * @property {Function} increment - Increase the value of the given path
+   *
+   * @param {String} path - The path to increase
+   * @param {Number} [amount] - The amount to add (optional)
+   * @returns {Object} - The ZeroDB object
+   *
+   * @example
+   *   zerodb.increment('age')
+   *   zerodb.increment('age', 5)
+   */
+  increment(path, amount = 1) {
+    if (typeof amount !== 'number') {
+      throw new Error('The amount to increase must be a number');
+    }
+
+    const currentValue = this.get(path);
+
+    if (!currentValue) {
+      throw new Error(`Path '${path}' doesn't exist`);
+    }
+
+    if (typeof currentValue !== 'number') {
+      throw new Error('You can only increase number values');
+    }
+
+    const increasedValue = currentValue + amount;
+
+    return this.set(path, increasedValue);
+  }
 }
 
 module.exports = ZeroDB;

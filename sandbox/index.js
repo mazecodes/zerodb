@@ -47,3 +47,9 @@ console.log(zerodb.get('posts'));
 
 // zerodb.reset().save().then(console.log);
 // console.log(zerodb.initialState);
+
+zerodb.set('age', 18);
+zerodb.increment('age');
+zerodb.increment('age', 10);
+
+console.log(zerodb.get('age'));
