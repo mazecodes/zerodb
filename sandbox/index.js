@@ -37,7 +37,7 @@ const onePost = zerodb.findOne('posts', {
 const withRegex = zerodb.find('posts', { title: /^Test/ });
 
 console.log(zerodb.get('posts'));
-zerodb.delete('posts');
+// zerodb.delete('posts');
 console.log(zerodb.get('posts'));
 
 // console.log(posts);
@@ -61,3 +61,5 @@ zerodb.set('username', 'JoHn');
 zerodb.update('username', value => value.toLowerCase());
 
 console.log(zerodb.get('username'));
+
+console.log(zerodb.getState());

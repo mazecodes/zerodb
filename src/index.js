@@ -170,9 +170,8 @@ class ZeroDB {
    */
   get(path, defaultValue = null) {
     const data = _.get(this.database, path, defaultValue);
-    const clonedData = cloneDeep(data);
 
-    return clonedData;
+    return cloneDeep(data);
   }
 
   /**
@@ -397,6 +396,20 @@ class ZeroDB {
     const newValue = updater(currentValue);
 
     return this.set(path, newValue);
+  }
+
+  /**
+   * @property {Function} getState - Get the current state of the database
+   *
+   * @returns {Object} - The current state of the database
+   *
+   * @example
+   *   zerodb.getState()
+   */
+  getState() {
+    const state = this.database;
+
+    return cloneDeep(state);
   }
 }
 
