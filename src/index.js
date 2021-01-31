@@ -17,6 +17,7 @@ class ZeroDB {
    * @param {Boolean} [options.encryption] - If there should be encryption/decryption
    * @param {String} [options.secret] - The secret to use for encryption/decryption (Required if the encryption is true)
    * @param {Number} [options.iterations] - The number of iterations for key generation
+   * @param {Boolean} [options.empty] - If it should create an empty database anyway
    * @returns {void}
    *
    * @example
@@ -31,6 +32,8 @@ class ZeroDB {
     this.secret = options.secret || '';
     this.iterations = options.iterations || 50_000;
     this.salt = '';
+
+    this.empty = !!options.empty;
 
     this.validateSource();
     this.validateCrypto();
@@ -114,7 +117,7 @@ class ZeroDB {
     const filePath = path.resolve(require.main.path, this.source);
     const fileExists = fs.existsSync(filePath);
 
-    if (fileExists) {
+    if (fileExists && !this.empty) {
       const stats = fs.statSync(filePath);
       const isFile = stats.isFile();
 
@@ -183,6 +186,8 @@ class ZeroDB {
       } catch (err) {
         if (err instanceof SyntaxError) {
           throw new Error('Database source contains malformed JSON');
+        } else {
+          throw err;
         }
       }
     } else {
