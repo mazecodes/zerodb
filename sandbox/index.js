@@ -1,4 +1,3 @@
-const { zipObjectDeep } = require('lodash');
 const ZeroDB = require('../src');
 
 const zdb = new ZeroDB('./database.json', {
