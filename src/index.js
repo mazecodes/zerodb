@@ -143,42 +143,7 @@ class ZeroDB {
 
             fs.writeFileSync(filePath, JSON.stringify(encryptedState), 'utf-8');
           } else {
-            const { salt, iterations } = database._encryption;
-
-            if (!salt || !iterations) {
-              this.salt = crypto.generateSalt();
-            } else {
-              this.salt = salt;
-              this.iterations =
-                typeof iterations === 'number' ? iterations : this.iterations;
-            }
-
-            this.key = crypto.generateKey(
-              this.secret,
-              this.salt,
-              this.iterations
-            );
-
-            const stateContent = database.state.content;
-            const stateSignature = database.state.signature;
-
-            if ((!stateContent, !stateSignature)) {
-              throw new Error('The state is not valid');
-            }
-
-            const isStateValid = crypto.isStateValid(
-              stateContent,
-              stateSignature,
-              this.key
-            );
-
-            if (!isStateValid) {
-              throw new Error('The state has been altered');
-            }
-
-            const decryptedState = crypto.decryptState(stateContent, this.key);
-
-            this.database = JSON.parse(decryptedState);
+            this.decryptDatabase(database);
           }
         } else {
           this.database = database;
@@ -186,13 +151,67 @@ class ZeroDB {
       } catch (err) {
         if (err instanceof SyntaxError) {
           throw new Error('Database source contains malformed JSON');
-        } else {
-          throw err;
         }
+
+        throw err;
       }
     } else {
       this.createDatabase(filePath);
     }
+  }
+
+  /**
+   * @property {Function} generateKey - Generate a key based on encryption config
+   * @access private
+   *
+   * @returns {String} - An encryption key
+   *
+   * @example
+   *   zerodb.generateKey()
+   */
+  generateKey() {
+    return crypto.generateKey(this.secret, this.salt, this.iterations);
+  }
+
+  /**
+   * @property {Function} decryptDatabase - Decrypt the given database
+   * @access private
+   *
+   * @param {Object} database - The database to decrypt
+   * @returns {void}
+   *
+   * @example
+   *   zerodb.decryptDatabase(db)
+   */
+  decryptDatabase(database) {
+    const { salt, iterations } = database._encryption;
+
+    this.salt = !salt ? crypto.generateSalt() : salt;
+    this.iterations =
+      typeof iterations === 'number' ? iterations : this.iterations;
+
+    this.key = this.generateKey();
+
+    const stateContent = database.state.content;
+    const stateSignature = database.state.signature;
+
+    if (!stateContent || !stateSignature) {
+      throw new Error('The state is not valid');
+    }
+
+    const isStateValid = crypto.isStateValid(
+      stateContent,
+      stateSignature,
+      this.key
+    );
+
+    if (!isStateValid) {
+      throw new Error('The state has been altered');
+    }
+
+    const decryptedState = crypto.decryptState(stateContent, this.key);
+
+    this.database = JSON.parse(decryptedState);
   }
 
   /**
