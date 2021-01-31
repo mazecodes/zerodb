@@ -183,7 +183,7 @@ class ZeroDB {
    *   zerodb.push('posts', { title: 'Foo' })
    */
   push(path, value) {
-    const destination = _.get(this.database, path);
+    const destination = this.get(path);
 
     if (!destination) {
       this.set(path, [value]);
@@ -226,7 +226,7 @@ class ZeroDB {
    *   zerodb.find('posts', { title: /^Hello/ })
    */
   find(path, query) {
-    const destination = _.get(this.database, path);
+    const destination = this.get(path);
 
     if (typeof query !== 'object') {
       throw new Error('Query must be an object');
