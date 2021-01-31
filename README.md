@@ -222,3 +222,19 @@ Please feel free to check [issues page](https://github.com/mazecodes/zerodb/issu
 1. Commit your changes (`git commit -m "Add Awesome Feature"`)
 1. Push to the branch (`git push origin feature/AwesomeFeature`)
 1. Open a Pull Request
+
+## Author
+
+Maze Peterson:
+
+- Twitter: [mazecodes](https://twitter.com/mazecodes)
+- GitHub: [mazecodes](https://github.com/mazecodes)
+- npm: [mazecodes](https://npmjs.com/~mazecodes)
+
+## Show your support
+
+Give a ⭐ if you liked this project!
+
+## License
+
+[MIT](https://github.com/mazecodes/zerodb/blob/master/LICENSE) © Maze Peterson
