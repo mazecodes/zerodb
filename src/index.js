@@ -369,6 +369,32 @@ class ZeroDB {
 
     return this.set(path, decreasedValue);
   }
+
+  /**
+   * @property {Function} update - Update the given path the updater
+   *
+   * @param {String} path - The path to update
+   * @param {Function} updater - The updater function
+   * @returns {Object} - The ZeroDB object
+   *
+   * @example
+   *   zerodb.update('username', value => value.toLowerCase())
+   */
+  update(path, updater) {
+    if (typeof updater !== 'function') {
+      throw new Error('Updater must be a function');
+    }
+
+    const currentValue = this.get(path);
+
+    if (!currentValue) {
+      throw new Error(`Path '${path}' doesn't exist`);
+    }
+
+    const newValue = updater(currentValue);
+
+    return this.set(path, newValue);
+  }
 }
 
 module.exports = ZeroDB;

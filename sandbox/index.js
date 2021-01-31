@@ -56,3 +56,8 @@ zerodb.decrement('age');
 zerodb.decrement('age', 10);
 
 console.log(zerodb.get('age'));
+
+zerodb.set('username', 'JoHn');
+zerodb.update('username', value => value.toLowerCase());
+
+console.log(zerodb.get('username'));
