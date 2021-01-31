@@ -52,4 +52,7 @@ zerodb.set('age', 18);
 zerodb.increment('age');
 zerodb.increment('age', 10);
 
+zerodb.decrement('age');
+zerodb.decrement('age', 10);
+
 console.log(zerodb.get('age'));

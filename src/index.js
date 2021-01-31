@@ -338,6 +338,37 @@ class ZeroDB {
 
     return this.set(path, increasedValue);
   }
+
+  /**
+   * @property {Function} decrement - Decrease the value of the given path
+   *
+   * @param {String} path - The path to decrease
+   * @param {Number} [amount] - The amount to subtract (optional)
+   * @returns {Object} - The ZeroDB object
+   *
+   * @example
+   *   zerodb.decrement('age')
+   *   zerodb.decrement('age', 5)
+   */
+  decrement(path, amount = 1) {
+    if (typeof amount !== 'number') {
+      throw new Error('The amount to decrease must be a number');
+    }
+
+    const currentValue = this.get(path);
+
+    if (!currentValue) {
+      throw new Error(`Path '${path}' doesn't exist`);
+    }
+
+    if (typeof currentValue !== 'number') {
+      throw new Error('You can only decrease number values');
+    }
+
+    const decreasedValue = currentValue - amount;
+
+    return this.set(path, decreasedValue);
+  }
 }
 
 module.exports = ZeroDB;
