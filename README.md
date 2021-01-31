@@ -1,6 +1,6 @@
 <div align="center">
   <h1>ZeroDB</h1>
-  <p><i>Easy to use JSON database for Node.</i></p>
+  <p><i>Easy to use JSON database for Node.js with encryption.</i></p>
 </div><br>
 
 ## Table of Contents
