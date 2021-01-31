@@ -123,16 +123,20 @@ class ZeroDB {
         throw new Error('Database source contains malformed JSON');
       }
     } else {
-      if (this.encryption) {
-        this.salt = crypto.generateSalt();
-        this.key = crypto.generateKey(this.secret, this.salt, this.iterations);
+      this.createDatabase(filePath);
+    }
+  }
 
-        const encryptedState = this.encryptState();
+  createDatabase(filePath) {
+    if (this.encryption) {
+      this.salt = crypto.generateSalt();
+      this.key = crypto.generateKey(this.secret, this.salt, this.iterations);
 
-        fs.writeFileSync(filePath, JSON.stringify(encryptedState));
-      } else {
-        fs.writeFileSync(filePath, '{}');
-      }
+      const encryptedState = this.encryptState();
+
+      fs.writeFileSync(filePath, JSON.stringify(encryptedState));
+    } else {
+      fs.writeFileSync(filePath, '{}');
     }
   }
 
