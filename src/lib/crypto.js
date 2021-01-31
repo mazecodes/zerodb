@@ -52,6 +52,22 @@ const encryptState = (state, key) => {
 };
 
 /**
+ * Decrypt the given state
+ *
+ * @param {String} encryptedState - The encrypted state
+ * @param {String} key - The key used for encryption
+ * @returns {String} - The decrypted state
+ *
+ * @example
+ *   decryptState(encryptedState, 'key')
+ */
+const decryptState = (encryptedState, key) => {
+  const decryptedState = CryptoJS.AES.decrypt(encryptedState, key).toString();
+
+  return decryptedState;
+};
+
+/**
  * Check if a signature is valid
  *
  * @param {String} encryptedState - The encrypted state
@@ -60,7 +76,7 @@ const encryptState = (state, key) => {
  * @returns {Boolean} - True if it was valid
  *
  * @example
- *   isStateValid(encryptedState, signature, key)
+ *   isStateValid(encryptedState, signature, 'key')
  */
 const isStateValid = (encryptedState, signature, key) => {
   const _signature = CryptoJS.HmacSHA256(encryptedState, key).toString(
