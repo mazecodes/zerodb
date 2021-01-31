@@ -16,12 +16,16 @@ class ZeroDB {
    * @example
    *   new ZeroDB('./database.json')
    */
-  constructor(source) {
+  constructor(source, options = {}) {
     this.source = source;
     this.database = {};
     this.initialState = {};
 
+    this.encrypt = !!options.encrypt;
+    this.secret = options.secret || '';
+
     this.validateSource();
+    this.validateCrypto();
     this.readDatabase();
   }
 
@@ -45,6 +49,27 @@ class ZeroDB {
 
     if (path.extname(this.source) !== '.json') {
       throw new Error('Database source should be JSON');
+    }
+  }
+
+  /**
+   * @property {Function} validateCrypto - Validate the crypto config
+   * @access private
+   *
+   * @returns {void}
+   *
+   * @example
+   *   zerodb.validateCrypto()
+   */
+  validateCrypto() {
+    if (this.encrypt) {
+      if (!this.secret) {
+        throw new Error('The secret must be provided for encryption');
+      }
+
+      if (typeof secret !== 'string') {
+        throw new Error('The secret must be a string');
+      }
     }
   }
 
