@@ -12,7 +12,12 @@
     "type": "git",
     "url": "git+https://github.com/mazecodes/zerodb.git"
   },
-  "keywords": [],
+  "keywords": [
+    "database",
+    "db",
+    "json",
+    "encryption"
+  ],
   "author": "Maze Petersom",
   "license": "MIT",
   "bugs": {
