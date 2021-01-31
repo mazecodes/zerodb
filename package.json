@@ -2,7 +2,7 @@
   "name": "zerodb",
   "version": "0.1.0",
   "description": "Easy to use JSON database for Node.js with encryption.",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
     "lint": "eslint \"./**/*.js\"",
     "lint:fix": "npm run lint -- --fix",
