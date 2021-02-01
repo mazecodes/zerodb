@@ -7,6 +7,7 @@
 
 - [Install](#install)
 - [Usage](#usage)
+  - [Encryption](#encryption)
 - [Contributing](#contributing)
 - [Author](#author)
 - [Support](#show-your-support)
