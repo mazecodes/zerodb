@@ -599,6 +599,27 @@ class ZeroDB {
 
     return this;
   }
+
+  /**
+   * @property {Function} destroy - Destroy the database
+   *
+   * @param {Boolean} removeDatabase - If it should removes the database file
+   * @returns {Object} - The ZeroDB object
+   *
+   * @example
+   *   zerodb.destroy()
+   *   zerodb.destroy(false)
+   */
+  destroy(removeDatabase = true) {
+    this.database = {};
+    this.initialState = {};
+
+    if (removeDatabase) {
+      fs.unlinkSync(this.filePath);
+    }
+
+    return this;
+  }
 }
 
 module.exports = ZeroDB;

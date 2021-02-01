@@ -58,3 +58,5 @@ zdb
     ],
   })
   .save(() => console.log('Saved'));
+
+zdb.destroy();
