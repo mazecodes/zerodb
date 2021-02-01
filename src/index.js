@@ -25,6 +25,7 @@ class ZeroDB {
    */
   constructor(source, options = {}) {
     this.source = source;
+    this.filePath = path.resolve(require.main.path, this.source);
     this.database = {};
     this.initialState = {};
 
@@ -114,11 +115,10 @@ class ZeroDB {
    *   zerodb.readDatabase()
    */
   readDatabase() {
-    const filePath = path.resolve(require.main.path, this.source);
-    const fileExists = fs.existsSync(filePath);
+    const fileExists = fs.existsSync(this.filePath);
 
     if (fileExists && !this.empty) {
-      const stats = fs.statSync(filePath);
+      const stats = fs.statSync(this.filePath);
       const isFile = stats.isFile();
 
       if (!isFile) {
@@ -126,7 +126,7 @@ class ZeroDB {
       }
 
       try {
-        const data = fs.readFileSync(filePath, 'utf-8');
+        const data = fs.readFileSync(this.filePath, 'utf-8');
         const database = JSON.parse(data);
 
         if (this.encryption) {
@@ -141,7 +141,11 @@ class ZeroDB {
 
             const encryptedState = this.encryptState();
 
-            fs.writeFileSync(filePath, JSON.stringify(encryptedState), 'utf-8');
+            fs.writeFileSync(
+              this.filePath,
+              JSON.stringify(encryptedState),
+              'utf-8'
+            );
           } else {
             this.decryptDatabase(database);
           }
@@ -156,7 +160,7 @@ class ZeroDB {
         throw err;
       }
     } else {
-      this.createDatabase(filePath);
+      this.createDatabase();
     }
   }
 
@@ -218,13 +222,12 @@ class ZeroDB {
    * @property {Function} createDatabase - Create a database
    * @access private
    *
-   * @param {String} filePath - The path to where the database should be created
    * @returns {void}
    *
    * @example
    *   zerodb.createDatabase('/path/to/db.json')
    */
-  createDatabase(filePath) {
+  createDatabase() {
     let data = '{}';
 
     if (this.encryption) {
@@ -236,7 +239,7 @@ class ZeroDB {
       data = JSON.stringify(encryptedState);
     }
 
-    fs.writeFileSync(filePath, data, 'utf-8');
+    fs.writeFileSync(this.filePath, data, 'utf-8');
   }
 
   /**
@@ -302,12 +305,11 @@ class ZeroDB {
    */
   async save() {
     const writeFile = promisify(fs.writeFile);
-    const filePath = path.resolve(require.main.path, this.source);
     const data = this.encryption
       ? JSON.stringify(this.encryptState())
       : JSON.stringify(this.database);
 
-    await writeFile(filePath, data, 'utf-8');
+    await writeFile(this.filePath, data, 'utf-8');
     return true;
   }
 
