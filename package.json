@@ -1,6 +1,6 @@
 {
   "name": "zerodb",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Easy to use JSON database for Node.js with encryption.",
   "main": "src/index.js",
   "scripts": {
