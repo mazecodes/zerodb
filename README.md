@@ -199,6 +199,18 @@ Replace the current state:
 db.setState({ foo: 'bar' });
 ```
 
+Destory the database:
+
+```javascript
+db.destory();
+```
+
+This will also delete the database file. If you don't want that, you can specify it like this:
+
+```javascript
+db.destroy(false);
+```
+
 ## Encryption
 
 Using encryption with ZeroDB is pretty simple. All you have to do is:
