@@ -7,6 +7,7 @@
 
 - [Install](#install)
 - [Usage](#usage)
+  - [Basic Usage](#basic-usage)
   - [Encryption](#encryption)
 - [Contributing](#contributing)
 - [Author](#author)
@@ -34,6 +35,8 @@ git clone https://github.com/mazecodes/zerodb.git
 ```
 
 ## Usage
+
+### Basic Usage
 
 Load a database:
 
