@@ -7,8 +7,7 @@
 
 - [Install](#install)
 - [Usage](#usage)
-  - [Basic Usage](#basic-usage)
-  - [Encryption](#encryption)
+- [Encryption](#encryption)
 - [Contributing](#contributing)
 - [Author](#author)
 - [Support](#show-your-support)
@@ -35,8 +34,6 @@ git clone https://github.com/mazecodes/zerodb.git
 ```
 
 ## Usage
-
-### Basic Usage
 
 Load a database:
 
@@ -202,9 +199,9 @@ Replace the current state:
 db.setState({ foo: 'bar' });
 ```
 
-### Encryption
+## Encryption
 
-You can use encryption with ZeroDB like this:
+Using encryption with ZeroDB is pretty simple. All you have to do is:
 
 ```javascript
 new ZeroDB('./database.json', {
