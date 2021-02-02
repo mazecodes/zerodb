@@ -25,19 +25,20 @@ class ZeroDB {
    */
   constructor(source, options = {}) {
     this.source = source;
-    this.filePath = path.resolve(require.main.path, this.source);
+    this.filePath = '';
     this.database = {};
     this.initialState = {};
 
     this.encryption = !!options.encryption;
     this.secret = options.secret || '';
-    this.iterations = options.iterations || 50_000;
+    this.iterations = options.iterations || 50000;
     this.salt = '';
 
     this.empty = !!options.empty;
 
     this.validateSource();
     this.validateCrypto();
+
     this.readDatabase();
   }
 
@@ -115,7 +116,10 @@ class ZeroDB {
    *   zerodb.readDatabase()
    */
   readDatabase() {
-    const fileExists = fs.existsSync(this.filePath);
+    const filePath = path.resolve(require.main.path, this.source);
+    const fileExists = fs.existsSync(filePath);
+
+    this.filePath = filePath;
 
     if (fileExists && !this.empty) {
       const stats = fs.statSync(this.filePath);
@@ -411,7 +415,7 @@ class ZeroDB {
     }
 
     const foundings = destination.filter(data => {
-      for (let key of Object.keys(query)) {
+      for (const key of Object.keys(query)) {
         if (isRegex(query[key])) {
           if (typeof data[key] !== 'string') {
             return false;
