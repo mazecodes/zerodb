@@ -1,8 +1,14 @@
 {
+  "root": true,
   "extends": ["airbnb-base", "prettier", "plugin:node/recommended"],
   "plugins": ["prettier"],
   "rules": {
     "prettier/prettier": "error",
-    "no-console": "off"
+    "no-console": "off",
+    "class-methods-use-this": "off",
+    "no-underscore-dangle": "off",
+    "no-shadow": "off",
+    "no-restricted-syntax": "off",
+    "no-lonely-if": "off"
   }
 }
